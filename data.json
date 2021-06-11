@@ -1,1 +1,1 @@
-{ "participants": ["{name: 'João', lastStatus: 12313123}"], "messages": ["{from: 'João', to: 'Todos', text: 'oi galera', type: 'message', time: '20:04:37'}"]}
+{"participants":[{"name":"Paulo","lastStatus":1623448448819}],"messages":[{"from":"Paulo","to":"Todos","text":"entra na sala...","type":"status","time":"HH:MM:SS"}]}
