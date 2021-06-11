@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
+import { strict as assert } from "assert";
+import { stripHtml } from "string-strip-html";
+
 
 const app = express();
 app.use(express.json());
@@ -18,11 +21,14 @@ app.post("/participants", (req, res) => {
         res.sendStatus(400);
         return;
     }
+    newUser.name.trim();
+    newUser.name = stripHtml(newUser.name).result;
+
     const participant = {...newUser, lastStatus: Date.now()}
     participants.push(participant)
     const message = {from: participant.name, to: 'Todos', text: 'entra na sala...', type: 'status', time: 'HH:MM:SS'}
     messages.push(message);
-    fs.writeFileSync("./data.json", JSON.stringify({participants, messages}));
+    //fs.writeFileSync("./data.json", JSON.stringify({participants, messages}));
     res.sendStatus(200);
 })
 
@@ -44,6 +50,7 @@ app.post("/messages", (req, res) => {
         res.sendStatus(400);
         return;
     }
+    messageContent.text = stripHtml(messageContent.text).result;
     const message = { from: userName, ...messageContent};
     messages.push(message)
     fs.writeFileSync("./data.json", JSON.stringify({participants, messages}));
