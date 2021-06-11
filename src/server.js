@@ -78,25 +78,17 @@ app.post("/status", (req, res) => {
 })
 
 setInterval(()=> {
-    const deleteParticipants = [];
-    const updatedParticipants = [];
 
-    participants.forEach(p => {
-        if(Date.now() - p.lastStatus > 10000){
-            deleteParticipants.push(p);
-        } else {
-            updatedParticipants.push(p);
-        }
-    })
+    const deletedParticipants = participants.filter(p => Date.now() - p.lastStatus > 10000);
 
-    deleteParticipants.forEach(p => {
+    deletedParticipants.forEach(p => {
         messages.push({from: p.name, to: 'Todos', text: 'sai da sala...', type: 'status', time: 'HH:MM:SS'})
     });
 
-    const array = JSON.stringify(participants);
-    console.log(array)
+    participants = participants.filter(p => Date.now() - p.lastStatus < 10000);
 
-    //fs.writeFileSync("./data.json", JSON.stringify({participants: updatedParticipants, messages}));
+    fs.writeFileSync("./data.json", JSON.stringify({participants, messages}));
+
 }, 15000)
 
 app.listen(4000, () => {
