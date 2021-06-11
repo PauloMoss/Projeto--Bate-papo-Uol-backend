@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
-import { strict as assert } from "assert";
 import { stripHtml } from "string-strip-html";
+import dayjs from 'dayjs';
 
 
 const app = express();
@@ -26,9 +26,9 @@ app.post("/participants", (req, res) => {
 
     const participant = {...newUser, lastStatus: Date.now()}
     participants.push(participant)
-    const message = {from: participant.name, to: 'Todos', text: 'entra na sala...', type: 'status', time: 'HH:MM:SS'}
+    const message = {from: participant.name, to: 'Todos', text: 'entra na sala...', type: 'status', time: dayjs().format('HH:MM:SS')}
     messages.push(message);
-    //fs.writeFileSync("./data.json", JSON.stringify({participants, messages}));
+    fs.writeFileSync("./data.json", JSON.stringify({participants, messages}));
     res.sendStatus(200);
 })
 
@@ -89,7 +89,7 @@ setInterval(()=> {
     const deletedParticipants = participants.filter(p => Date.now() - p.lastStatus > 10000);
 
     deletedParticipants.forEach(p => {
-        messages.push({from: p.name, to: 'Todos', text: 'sai da sala...', type: 'status', time: 'HH:MM:SS'})
+        messages.push({from: p.name, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs().format('HH:MM:SS')})
     });
 
     participants = participants.filter(p => Date.now() - p.lastStatus < 10000);
